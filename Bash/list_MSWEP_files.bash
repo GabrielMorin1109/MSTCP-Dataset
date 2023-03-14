@@ -9,5 +9,5 @@ echo " Size FileName" > Data/MSWEP_FileName.txt
 for folder in NRT Past
 do
     # list all file; select only filename with .nc; with ">>", append filename into MSWEP_FileName.txt 
-    rclone ls -v --drive-shared-with-me "GoogleDrive:/MSWEP_V280/$folder/Monthly" | grep ".nc" >> Data/MSWEP_FileName.txt
+    rclone ls -v --drive-shared-with-me "GoogleDrive:/MSWEP_V280/$folder/Monthly" | grep ".nc" >> MSWEP_FileName.txt
 done

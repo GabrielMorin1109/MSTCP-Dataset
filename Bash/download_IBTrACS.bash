@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-# make the first argument when calling the script as file_path variable
-file_path = Data/Data_IBTrACS/
 
-# get IBTrACS and save it to file_dir
+# file_path variable defining the path where IBTrACS data will be stored
+file_path = Data/Data_IBTrACS
+
+# create folder Data_IBTrACS if doesn't exist
+[ -d $file_path ] && rm Data/Data_IBTrACS
+
+# get IBTrACS and save it to file_path
 wget \
-    {$file_dir} \
+    $file_path/ibtracs.ALL.list.v04r00.csv \
     https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r00/access/csv/ibtracs.ACTIVE.list.v04r00.csv
 
 # create MSWEP_FileName.txt to save 
