@@ -1,3 +1,6 @@
+# folder to ignore at git push
+Data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
