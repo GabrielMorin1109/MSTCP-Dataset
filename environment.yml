@@ -1,0 +1,10 @@
+name: TC_Precipitations
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10.9
+  - geospatial=0.7.0
+  - wget=1.20.3
+  - rclone=1.61.1
+  - snakemake=7.24.2
