@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # create folder Data_MSWEP if doesn't exist
-[ -d Data/Data_MSWEP ] && rm Data/Data_MSWEP
+[ -d Data/Data_MSWEP ] || mkdir Data/Data_MSWEP
 
 # syncronize googledrive with local system
 for folder in NRT Past
