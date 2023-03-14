@@ -1,5 +1,5 @@
 # folder to ignore at git
-Data/*
+Data/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
