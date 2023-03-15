@@ -1,7 +1,5 @@
-
-# check for change in the dataset
 onstart:
-    print("Check for database update.")
+    # Synchronized the database once per week.
     shell("Bash/sync_MSWEP.bash")
 
 rule targets:
