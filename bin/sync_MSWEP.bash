@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # from GoogleDrive ($1 folder), check if file matching with file in Data_MSWEP and update 
 sync_from_GoogleDrive_folder() {
-    rclone sync -v --drive-shared-with-me "GoogleDrive:/MSWEP_V280/$1/Monthly/" Data/Data_MSWEP/$1
+    rclone sync -v --drive-shared-with-me "GoogleDrive:/MSWEP_V280/$1/3hourly/" Data/Data_MSWEP/$1
 }
 
 # Get the time of last data modification (only keep year, month and day). If files do not exist, it is not a problem
