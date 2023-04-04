@@ -1,0 +1,22 @@
+name: TC_Precipitations
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - jupyterlab
+  - jupyterlab-git
+  - wget=1.20.3
+  - rclone=1.61.1
+  - pyprojroot
+  - geospatial
+  # Does it need to be installed within the GIS environment?
+  # - bioconda::snakemake
+
+
+  # newer
+  # - ipython
+  # - jupyter
+  # - jupyterlab>3
+  # - numpy
+  # - pandas
+  # - xarray=2022.09
