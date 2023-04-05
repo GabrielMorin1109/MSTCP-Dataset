@@ -13,5 +13,7 @@ MSWEP_paths = [
 MSWEP_path = MSWEP_paths[0]
 # %%
 # create the grid cell area file
-command = f"cdo gridarea {MSWEP_path} {MSWEP_folder}/grid_area.nc"
+command = f"cdo gridarea {MSWEP_path} {here('Data')}/grid_area_MSWEP.nc"
 system(command)
+
+# %%
