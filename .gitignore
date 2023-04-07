@@ -1,6 +1,7 @@
 # folder to ignore at git
 Data/Data_IBTrACS/**
 Data/Data_MSWEP/**
+bin/old_functions/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
