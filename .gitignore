@@ -1,6 +1,7 @@
 # folder to ignore at git
 Data/Data_IBTrACS/**
 Data/Data_MSWEP/**
+Data/grid_area_MSWEP.nc
 bin/old_functions/**
 
 # Byte-compiled / optimized / DLL files
