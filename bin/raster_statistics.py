@@ -28,6 +28,10 @@ def raster_statistics(
     geometry = geodesic_point_buffer(lat=lat, lon=lon, radius_km=max_radius_km)
     DataArray_clipped = DataArray.rio.clip([geometry], CRS.from_epsg(crs), drop=False)
 
+    area_averaged_TCP = (
+        DataArray_clipped.weighted(grid_area_MSWEP).mean(("lon", "lat")).values
+    ) * 3
+
     # Select element over threshold and sum the area over threshold
     over_threshold = ~np.isnan(
         DataArray_clipped.where(DataArray_clipped >= 0.5 * 3)
@@ -51,7 +55,7 @@ def raster_statistics(
 
     # Binned raster statistics ------------------------------------
     bin_sequence = [*range(0, max_radius_km, ring_thickness_km)]
-    bin_statistics = {"bin": bin_sequence, "area_averaged_TCP": []}
+    bin_statistics = {"bin": bin_sequence, "binned_area_averaged_TCP": []}
 
     for radius_bin in bin_sequence:
         # Clip raster with the polygon
@@ -68,11 +72,11 @@ def raster_statistics(
         )
         # Add grad cell area as weight and calculate the weighted average.
         bin_DataArray_clipped_weighted = bin_DataArray_clipped.weighted(grid_area_MSWEP)
-        area_averaged_TCP = (
+        binned_area_averaged_TCP = (
             bin_DataArray_clipped_weighted.mean(("lon", "lat")).values * 3
         )  # Multiplied by 3 to convert from mm/3h to mm/h
 
-        bin_statistics["area_averaged_TCP"].extend(area_averaged_TCP)
+        bin_statistics["binned_area_averaged_TCP"].extend(binned_area_averaged_TCP)
 
     OUT = {
         "RA_over_threshold": RA_over_threshold,
@@ -80,6 +84,7 @@ def raster_statistics(
         "lon_max_precipitation": lon_max_precipitation,
         "lat_max_precipitation": lat_max_precipitation,
         "max_precipitation": max_precipitation,
+        "area_averaged_TCP": area_averaged_TCP,
         "bin_statistics": bin_statistics,
     }
     return OUT
