@@ -47,7 +47,7 @@ def raster_statistics(
     lon_max_precipitation = xr_max_precipitation["lon"].values
     lat_max_precipitation = xr_max_precipitation["lat"].values
     max_precipitation = (
-        xr_max_precipitation.values * 3
+        xr_max_precipitation.values / 3
     )  # Multiplied by 3 to convert from mm/3h to mm/h
     radius_of_maximum_rain = haversine(
         lon1=lon, lat1=lat, lon2=lon_max_precipitation, lat2=lat_max_precipitation
