@@ -30,9 +30,9 @@ def raster_statistics(
 
     area_averaged_TCP = (
         DataArray_clipped.weighted(grid_area_MSWEP).mean(("lon", "lat")).values
-    ) * 3
+    ) / 3
 
-    # Select element over threshold and sum the area over threshold
+    # Select element over threshold and sum the area over threshold of 0.5 mm/h (thus 0.5 mm/h * 3/3 = 1.5 mm/3h)
     over_threshold = ~np.isnan(
         DataArray_clipped.where(DataArray_clipped >= 0.5 * 3)
     )  # Multiplied by 3 to convert from mm/3h to mm/h
@@ -73,7 +73,7 @@ def raster_statistics(
         # Add grad cell area as weight and calculate the weighted average.
         bin_DataArray_clipped_weighted = bin_DataArray_clipped.weighted(grid_area_MSWEP)
         binned_area_averaged_TCP = (
-            bin_DataArray_clipped_weighted.mean(("lon", "lat")).values * 3
+            bin_DataArray_clipped_weighted.mean(("lon", "lat")).values / 3
         )  # Multiplied by 3 to convert from mm/3h to mm/h
 
         bin_statistics["binned_area_averaged_TCP"].extend(binned_area_averaged_TCP)
