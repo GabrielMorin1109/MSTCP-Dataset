@@ -29,7 +29,7 @@ def raster_statistics(
     DataArray_clipped = DataArray.rio.clip([geometry], CRS.from_epsg(crs), drop=False)
 
     area_averaged_TCP = (
-        DataArray_clipped.weighted(grid_area_MSWEP).mean(("lon", "lat")).values
+        DataArray_clipped.weighted(grid_area).mean(("lon", "lat")).values
     ) / 3
 
     # Select element over threshold and sum the area over threshold of 0.5 mm/h (thus 0.5 mm/h * 3/3 = 1.5 mm/3h)
@@ -71,7 +71,7 @@ def raster_statistics(
             [bin_geometry], CRS.from_epsg(crs), drop=False
         )
         # Add grad cell area as weight and calculate the weighted average.
-        bin_DataArray_clipped_weighted = bin_DataArray_clipped.weighted(grid_area_MSWEP)
+        bin_DataArray_clipped_weighted = bin_DataArray_clipped.weighted(grid_area)
         binned_area_averaged_TCP = (
             bin_DataArray_clipped_weighted.mean(("lon", "lat")).values / 3
         )  # Multiplied by 3 to convert from mm/3h to mm/h

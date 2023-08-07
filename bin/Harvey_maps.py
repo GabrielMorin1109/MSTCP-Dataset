@@ -20,7 +20,6 @@ from tqdm import tqdm  # progress bar, tqdm.pandas() to use progress_apply with 
 
 import matplotlib.pyplot as plt
 
-# import matplotlib.cm as cm
 import seaborn as sns
 import cartopy.crs as ccrs
 
@@ -112,9 +111,7 @@ class spatial_manipulations:
         )
         return self_stats
 
-    def plot(
-        self, np_func, legend_title, path_plot_to_file, levels_input, dim: tuple = ()
-    ):
+    def plot(self, np_func, legend_title, path_plot_to_file, levels_input, dim):
         from shapely.geometry import LineString
         from matplotlib import cm
         from matplotlib.colors import ListedColormap, LinearSegmentedColormap
@@ -198,15 +195,6 @@ class spatial_manipulations:
 # tropical storm status
 TCS = IBTrACS.loc[IBTrACS.USA_WIND.gt(34).idxmax() :]
 
-# get the 20th greather precipitation values
-if False:
-    tmp = spatial_manipulations(TCS).apply_fun(
-        np_func="nansum",
-        dim=("time"),
-    )
-    tmp = [x for x in np.sort(tmp.values.flatten()) if ~np.isnan(x)]
-    print(tmp[len(tmp) - 20 : len(tmp)])
-
 # First graph :
 spatial_manipulations(TCS).plot(
     np_func="nansum",
@@ -224,15 +212,6 @@ USA = world_gdf[world_gdf.name == "United States of America"].geometry.unary_uni
 # Overland
 geometries_gds = spatial_manipulations(IBTrACS).buffers_geometry()
 OL = IBTrACS[geometries_gds.intersects(USA)]
-
-# get the 20th greather precipitation values
-if False:
-    tmp = spatial_manipulations(OL).apply_fun(
-        np_func="nanmax",
-        dim=("time"),
-    )
-    tmp = [x for x in np.sort(tmp.values.flatten()) if ~np.isnan(x)]
-    print(tmp[len(tmp) - 20 : len(tmp)])
 
 # the plot:
 spatial_manipulations(OL).plot(
