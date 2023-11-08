@@ -30,12 +30,12 @@ from IBTrACS_read import IBTrACS_read
 IBTrACS = IBTrACS_read(path_IBTrACS="Data/Data_IBTrACS/ibtracs.ALL.list.v04r00.csv")
 
 # %% =============================================================================================================================
-computed_extractions = [
-    os.path.splitext(computed_extraction)[0]
-    for computed_extraction in os.listdir(here("Data/Data_TCP/json/"))
-]
+# computed_extractions = [
+#     os.path.splitext(computed_extraction)[0]
+#     for computed_extraction in os.listdir(here("Data/Data_TCP/json/"))
+# ]
 
-IBTrACS = IBTrACS[~IBTrACS.row_id.isin([computed_extractions])]
+# IBTrACS = IBTrACS[~IBTrACS.row_id.isin([computed_extractions])]
 
 # %% =============================================================================================================================
 for index, row in tqdm(
@@ -108,6 +108,19 @@ cols_str_to_list = [
 for column in cols_str_to_list:
     df_TCP[column] = df_TCP[column].apply(lambda x: ast.literal_eval(x))
 
+df_TCP.rename(
+    columns={
+        "area_averaged_TCP": "area_avg_TCP",
+        "lat_max_precipitation": "lat_max_precip",
+        "lon_max_precipitation": "lon_max_precip",
+        "max_precipitation": "max_precip",
+        "radius_of_maximum_rain": "RMR",
+        "bin_sequence": "bin",
+        "binned_area_averaged_TCP": "azim_avg_TCP",
+    },
+    inplace=True,
+)
+# %%
 # binned
 new_binned = df_TCP.loc[
     :,
@@ -118,11 +131,11 @@ new_binned = df_TCP.loc[
         "LAT",
         "LON",
         "variant",
-        "bin_sequence",
-        "binned_area_averaged_TCP",
+        "bin",
+        "azim_avg_TCP",
         "row_id",
     ],
-].explode(["bin_sequence", "binned_area_averaged_TCP"], ignore_index=True)
+].explode(["bin", "azim_avg_TCP"], ignore_index=True)
 new_binned.to_csv(str(here("Data/binned_Data_TCP.csv")), index=False)
 # non_binned
 non_binned_cols = [
@@ -134,18 +147,18 @@ non_binned_cols = [
     "LON",
     "variant",
     "RA_over_threshold",
-    "area_averaged_TCP",
-    "lat_max_precipitation",
-    "lon_max_precipitation",
-    "max_precipitation",
-    "radius_of_maximum_rain",
+    "area_avg_TCP",
+    "lat_max_precip",
+    "lon_max_precip",
+    "max_precip",
+    "RMR",
 ]
 cols_list_to_first = [
-    "radius_of_maximum_rain",
-    "lon_max_precipitation",
-    "lat_max_precipitation",
-    "max_precipitation",
-    "area_averaged_TCP",
+    "RMR",
+    "lat_max_precip",
+    "lon_max_precip",
+    "max_precip",
+    "area_avg_TCP",
 ]
 for column in cols_list_to_first:
     df_TCP[column] = df_TCP[column].apply(lambda x: x[0])
@@ -153,5 +166,4 @@ for column in cols_list_to_first:
 df_TCP.loc[:, non_binned_cols].to_csv(
     str(here("Data/non_binned_Data_TCP.csv")), index=False
 )
-
 # %%
