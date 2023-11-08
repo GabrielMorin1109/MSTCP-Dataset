@@ -3,12 +3,10 @@
 # Packages ----------------------------------------------------------------
 from pyprojroot.here import here
 
-# Geo stuff:
 import geopandas as gpd
 import pandas as pd
 import numpy as np
 
-# My scripts
 from get_paths_to_rasters import paths_to_rasters
 
 
@@ -28,8 +26,6 @@ def IBTrACS_read(
     IBTrACS = gpd.GeoDataFrame(
         IBTrACS, geometry=gpd.points_from_xy(IBTrACS.LON, IBTrACS.LAT), crs=4326
     )
-    # set index name as 'row_id'
-    IBTrACS.index.set_names("row_id", inplace=True)
     # Convert ISO_TIME from string to datetime
     IBTrACS["ISO_TIME"] = pd.to_datetime(
         IBTrACS["ISO_TIME"], format="%Y-%m-%d %H:%M:%S"
@@ -49,7 +45,9 @@ def IBTrACS_read(
         left_on=["ISO_TIME"],
         right_on=["time"],
     )
-    # Correct the longitude coordinate outside of the bounding box of -180,180, -90, 90.
+    # Correct the coordinates outside of the bounding box of -180,180, -90, 90.
     IBTrACS["LON"] = IBTrACS["LON"].apply(lambda x: np.sign(x) * (np.abs(x) % 180))
+    # set index name as 'row_id'
+    IBTrACS.rename(columns={"index": "row_id"}, inplace=True)
 
     return IBTrACS

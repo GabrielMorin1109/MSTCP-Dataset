@@ -1,8 +1,16 @@
-# folder to ignore at git
+# folders and files to ignore at git
 Data/Data_IBTrACS/**
 Data/Data_MSWEP/**
 Data/grid_area_MSWEP.nc
 bin/old_functions/**
+bin/all_stats_graph.py
+bin/Harvey_maps.py
+Data/Data_TCP_Backup/**
+Data/Data_TCP_old/**
+Data/Data_TCP/**
+Data/Data_TCP.csv
+Data/binned_Data_TCP.csv
+Data/non_binned_Data_TCP.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

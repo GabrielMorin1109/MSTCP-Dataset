@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# from GoogleDrive ($1 folder), check if file matching with file in Data_MSWEP and update 
+# from GoogleDrive ($1 folder), check if file matching with files in Data_MSWEP and update 
 sync_from_GoogleDrive_folder() {
     rclone sync -v --drive-shared-with-me "GoogleDrive:/MSWEP_V280/$1/3hourly/" Data/Data_MSWEP/$1
 }
@@ -23,13 +23,3 @@ then
     sync_from_GoogleDrive_folder NRT
     sync_from_GoogleDrive_folder Past
 fi
-
-################################################################################################################################
-# Bash condition cheat sheet (https://unix.stackexchange.com/a/304258)
-#     "A ; B" Run A and then B, regardless of success of A
-#     "A && B" Run B if A succeeded
-#     "A || B" Run B if A failed
-#     "A &" Run A in background.
-
-# Advance Bash-Scripting Guide: 8.1. Operators (https://tldp.org/LDP/abs/html/ops.html#LOGOPS1)
-################################################################################################################################

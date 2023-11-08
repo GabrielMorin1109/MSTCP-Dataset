@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#%%
+# %%
 from pyprojroot.here import here
 import os
 from datetime import datetime
@@ -25,6 +25,12 @@ def paths_to_rasters() -> dict:
         os.path.splitext(os.path.basename(nc_path))[0] for nc_path in nc_paths
     ]
 
+    # Variant:
+    variant = [
+        os.path.basename(os.path.normpath(os.path.dirname(nc_path)))
+        for nc_path in nc_paths
+    ]
+
     # Get corresponding date from filename
     date = [datetime.strptime(date_string, "%Y%j.%H") for date_string in files_name]
 
@@ -32,6 +38,10 @@ def paths_to_rasters() -> dict:
     OUT = {
         "origin": nc_paths,
         "files_name": files_name,
+        "variant": variant,
         "time": date,
     }
     return OUT
+
+
+# %%

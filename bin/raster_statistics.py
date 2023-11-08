@@ -9,7 +9,7 @@ import numpy as np
 from geodesic_point_buffer import geodesic_point_buffer  # geosesic buffer
 from haversine import haversine
 
-# Compute all statistics:
+# Area weights:
 grid_area_MSWEP = xr.open_dataarray(here("Data/grid_area_MSWEP.nc"))
 
 
@@ -29,13 +29,11 @@ def raster_statistics(
     DataArray_clipped = DataArray.rio.clip([geometry], CRS.from_epsg(crs), drop=False)
 
     area_averaged_TCP = (
-        DataArray_clipped.weighted(grid_area).mean(("lon", "lat")).values
-    ) / 3
+        DataArray_clipped.weighted(grid_area).mean(("lon", "lat")).values / 3
+    )
 
     # Select element over threshold and sum the area over threshold of 0.5 mm/h (thus 0.5 mm/h * 3/3 = 1.5 mm/3h)
-    over_threshold = ~np.isnan(
-        DataArray_clipped.where(DataArray_clipped >= 0.5 * 3)
-    )  # Multiplied by 3 to convert from mm/3h to mm/h
+    over_threshold = ~np.isnan(DataArray_clipped.where(DataArray_clipped >= 0.5 * 3))
     RA_over_threshold = grid_area.where(over_threshold).sum().values / (
         1000 * 1000
     )  # conversion from m2 to km2
@@ -48,35 +46,34 @@ def raster_statistics(
     lat_max_precipitation = xr_max_precipitation["lat"].values
     max_precipitation = (
         xr_max_precipitation.values / 3
-    )  # Multiplied by 3 to convert from mm/3h to mm/h
+    )  # Divided by 3 to convert from mm/3h to mm/h
     radius_of_maximum_rain = haversine(
         lon1=lon, lat1=lat, lon2=lon_max_precipitation, lat2=lat_max_precipitation
     )
 
     # Binned raster statistics ------------------------------------
     bin_sequence = [*range(0, max_radius_km, ring_thickness_km)]
-    bin_statistics = {"bin": bin_sequence, "binned_area_averaged_TCP": []}
+    binned_area_averaged_TCP = []
 
     for radius_bin in bin_sequence:
         # Clip raster with the polygon
         inner_bin_geometry = geodesic_point_buffer(
             lat=lat, lon=lon, radius_km=radius_bin
-        )  # .buffer(0)
+        )
         outer_bin_geometry = geodesic_point_buffer(
             lat=lat, lon=lon, radius_km=radius_bin + ring_thickness_km
-        )  # .buffer(0)
+        )
         bin_geometry = outer_bin_geometry.difference(inner_bin_geometry)
 
-        bin_DataArray_clipped = DataArray_clipped.rio.clip(  # Using DataArray_clipped is 6x faster than DataArray
+        bin_DataArray_clipped = DataArray_clipped.rio.clip(
             [bin_geometry], CRS.from_epsg(crs), drop=False
         )
-        # Add grad cell area as weight and calculate the weighted average.
+        # Add grid cell area as weight and calculate the weighted average.
         bin_DataArray_clipped_weighted = bin_DataArray_clipped.weighted(grid_area)
-        binned_area_averaged_TCP = (
-            bin_DataArray_clipped_weighted.mean(("lon", "lat")).values / 3
-        )  # Multiplied by 3 to convert from mm/3h to mm/h
 
-        bin_statistics["binned_area_averaged_TCP"].extend(binned_area_averaged_TCP)
+        binned_area_averaged_TCP.extend(
+            bin_DataArray_clipped_weighted.mean(("lon", "lat")).values / 3
+        )
 
     OUT = {
         "RA_over_threshold": RA_over_threshold,
@@ -85,6 +82,7 @@ def raster_statistics(
         "lat_max_precipitation": lat_max_precipitation,
         "max_precipitation": max_precipitation,
         "area_averaged_TCP": area_averaged_TCP,
-        "bin_statistics": bin_statistics,
+        "bin_sequence": bin_sequence,
+        "binned_area_averaged_TCP": binned_area_averaged_TCP,
     }
     return OUT
