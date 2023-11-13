@@ -1,5 +1,5 @@
 Code for the paper named "A Global Multi-Source Tropical Cyclone Precipitation (MSTCP) Dataset".
-Link to access the data: https://zenodo.org/records/8322963
+Link to access the data: [https://zenodo.org/records/8322963](https://zenodo.org/doi/10.5281/zenodo.8322962)
 
 ## DATA 
 To access any data, you must accept all provider data licensing. 
